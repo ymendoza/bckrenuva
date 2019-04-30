@@ -1,0 +1,38 @@
+ <?php 
+ $inven=0;
+ $inven  =  $_SESSION["abierto"];
+ ?>
+
+ @guest
+ <li><a href="{{ route('login') }}">Login</a></li>                           
+ @else
+
+ <ul class="app-menu">
+  <li><a class="app-menu__item {{ Request::is('/','home') ? 'active disabledd' : '' }}"  href="{{ route('home') }}"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Inicio</span></a></li>
+  @foreach($modulos as $modulo) 
+  <?php $clase="app-menu__icon ".$modulo->icono;?>
+  <li class="treeview {{ Request::is($modulo->request) ? 'is-expanded' : '' }}"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="{{$clase}}"></i><span class="app-menu__label">{{$modulo->descripcion}}</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+    <ul class="treeview-menu ">
+
+      @foreach($autorizaciones as $autorizacion)
+      
+      @if($inven==1)
+  
+          @if($autorizacion->id_modulo == $modulo->id_modulo) {{-- && $autorizacion->inventario==0) DA ERROR CUANDO EL INVENTARIO ESTA ABIERTO --}}
+      
+            <li><a class="treeview-item {{ Request::is($autorizacion->request) ? 'active disabledd' : '' }}" href="{{url($autorizacion->ruta)}}"><i class="icon fa fa-circle-o"></i>{{$autorizacion->opcion}}</a></li>
+          @endif
+      @else
+          @if($autorizacion->id_modulo == $modulo->id_modulo)
+      
+            <li><a class="treeview-item {{ Request::is($autorizacion->request) ? 'active disabledd' : '' }}" href="{{url($autorizacion->ruta)}}"><i class="icon fa fa-circle-o"></i>{{$autorizacion->opcion}}</a></li>
+          @endif
+
+      @endif    
+      @endforeach
+    </ul>
+  </li>
+  @endforeach
+ 
+</ul>
+@endguest
